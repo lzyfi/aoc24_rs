@@ -11,8 +11,8 @@ pub fn part_one(input: &str) -> Option<u32> {
         (0, -1),
         (0, 1),
     ];
-    let board: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
-    let word = "XMAS";
+    let board: Vec<&[u8]> = input.lines().map(|l| l.as_bytes()).collect();
+    let word = b"XMAS";
     let mut count = 0;
     for y in 0..board.len() {
         for x in 0..board[0].len() {
@@ -26,7 +26,7 @@ pub fn part_one(input: &str) -> Option<u32> {
                         break;
                     }
 
-                    if board[y_n][x_n] != word.chars().collect::<Vec<_>>()[iter] {
+                    if board[y_n][x_n] != word[iter] {
                         m = false;
                         break;
                     }
