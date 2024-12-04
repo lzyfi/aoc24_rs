@@ -1,12 +1,13 @@
 use regex::Regex;
+use std::sync::LazyLock;
 
 advent_of_code::solution!(3);
 
 pub fn part_one(input: &str) -> Option<u32> {
+    static RE: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap());
     Some(
-        Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)")
-            .unwrap()
-            .captures_iter(input)
+        RE.captures_iter(input)
             .map(|cap| cap[1].parse::<u32>().unwrap() * cap[2].parse::<u32>().unwrap())
             .sum(),
     )
@@ -19,8 +20,9 @@ enum Op {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let re = Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)|(do\(\))|(don't\(\))").unwrap();
-    let ops: Vec<Op> = re
+    static RE: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap());
+    let ops: Vec<Op> = RE
         .find_iter(input)
         .map(|m| {
             let ms = m.as_str();
