@@ -21,7 +21,7 @@ enum Op {
 
 pub fn part_two(input: &str) -> Option<u32> {
     static RE: LazyLock<Regex> =
-        LazyLock::new(|| Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)").unwrap());
+        LazyLock::new(|| Regex::new(r"mul\((\d{1,3}),(\d{1,3})\)|(do\(\))|(don't\(\))").unwrap());
     let ops: Vec<Op> = RE
         .find_iter(input)
         .map(|m| {
