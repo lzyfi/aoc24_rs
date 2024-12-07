@@ -1,15 +1,19 @@
 use std::num::Wrapping;
 
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
+
 advent_of_code::solution!(6);
 
 static DIRS: [(i32, i32); 4] = [(0, -1), (1, 0), (0, 1), (-1, 0)];
 
+#[derive(Clone)]
 struct Map {
     width: usize,
     height: usize,
     obstacles: Vec<Vec<u8>>,
     guard: (usize, usize),
     dir: usize,
+    unique: usize,
 }
 
 impl Map {
@@ -21,20 +25,38 @@ impl Map {
             return true;
         }
 
-        if self.obstacles[ny][nx] == 1 {
-            self.dir += 1;
-        } else {
-            self.guard = (nx, ny);
-            self.obstacles[ny][nx] = 2;
+        match self.obstacles[ny][nx] {
+            1 => self.dir += 1,
+            2 => self.guard = (nx, ny),
+            0 => {
+                self.guard = (nx, ny);
+                self.obstacles[ny][nx] = 2;
+                self.unique += 1;
+            }
+            _ => (),
         }
-
         false
     }
 
     fn run(&mut self) -> u32 {
         loop {
             if self.update_guard() {
-                return self.obstacles.iter().flatten().filter(|n| n == &&2).count() as u32;
+                return self.unique as u32;
+            }
+        }
+    }
+
+    fn escapes(&mut self, threshold: usize) -> bool {
+        let mut old;
+        let mut count = 0;
+        loop {
+            old = self.unique;
+            if self.update_guard() {
+                return true;
+            }
+            count = if self.unique == old { count + 1 } else { 0 };
+            if count > threshold {
+                return false;
             }
         }
     }
@@ -52,12 +74,15 @@ impl Map {
                     }
                 } else if self.obstacles[y][x] == 1 {
                     print!("#");
+                } else if self.obstacles[y][x] == 2 {
+                    print!("*");
                 } else {
                     print!(".");
                 }
             }
             println!();
         }
+        println!();
     }
 }
 
@@ -87,6 +112,7 @@ fn parse(input: &str) -> Map {
         obstacles,
         guard,
         dir: 0,
+        unique: 0,
     }
 }
 
@@ -96,7 +122,31 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    None
+    let map = parse(input);
+    let mut ran = map.clone();
+    let max = map.height * map.width;
+    ran.run();
+    Some(
+        (0..map.height)
+            .into_par_iter()
+            .map(|y| {
+                let mut count = 0;
+                for x in 0..map.width {
+                    let mut map_cl = map.clone();
+
+                    if ran.obstacles[y][x] != 2 || map.guard == (x, y) {
+                        continue;
+                    }
+                    
+                    map_cl.obstacles[y][x] = 1;
+                    if !map_cl.escapes(max) {
+                        count += 1;
+                    }
+                }
+                count
+            })
+            .sum(),
+    )
 }
 
 #[cfg(test)]
@@ -112,6 +162,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(6));
     }
 }
