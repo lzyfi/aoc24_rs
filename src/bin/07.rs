@@ -12,10 +12,10 @@ fn parse(input: &str) -> Vec<Vec<usize>> {
 
 fn calc(v: &[usize], ins: usize) -> usize {
     let mut res = v[0];
-    for (i, num) in v.iter().enumerate().skip(1) {
+    for i in 1..v.len() {
         match (ins & (1 << (i - 1))) != 0 {
-            true => res += num,
-            false => res *= num,
+            true => res += v[i],
+            false => res *= v[i],
         };
     }
     res
@@ -37,17 +37,20 @@ fn ternary(num: usize) -> Vec<u8> {
 }
 
 fn concat(a: usize, b: usize) -> usize {
-    10_usize.pow((b as f64).log10() as u32 + 1) * a + b
+    let mut n = 10;
+    while b >= n {
+        n *= 10;
+    }
+    a * n + b
 }
 
-#[inline(always)]
 fn calc2(v: &[usize], ins: &[u8]) -> usize {
     let mut res = v[0];
-    for (i, num) in v.iter().enumerate().skip(1) {
+    for i in 1..v.len() {
         match ins[i - 1] {
-            0 => res += num,
-            1 => res *= num,
-            2 => res = concat(res, *num),
+            0 => res += v[i],
+            1 => res *= v[i],
+            2 => res = concat(res, v[i]),
             _ => (),
         };
     }
