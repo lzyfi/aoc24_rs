@@ -12,4 +12,4 @@ time = "run --quiet --release -- time"
 AOC_YEAR = "2024"
 
 [build]
-rustflags = ["-C", "target-cpu=native", "-C", "link-arg=-fuse-ld=lld"]
+rustflags = ["-C", "target-cpu=native"]
