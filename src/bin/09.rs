@@ -34,10 +34,28 @@ pub fn part_one(input: &str) -> Option<usize> {
     let layout = parse(input);
     let mut temp = layout.clone();
 
+    let free: Vec<usize> = layout
+        .iter()
+        .enumerate()
+        .filter_map(|(i, b)| match b {
+            Block::Free => Some(i),
+            _ => None,
+        })
+        .collect();
+
+    let len = free.len();
+    let mut ind = 0;
+
     for i in (0..layout.len()).rev() {
         match layout[i] {
             Block::Data(_) => {
-                let f = temp.iter().position(|b| b == &Block::Free).unwrap();
+                if ind >= len {
+                    break;
+                }
+
+                let f = free[ind];
+                ind += 1;
+
                 if f < i {
                     temp.swap(i, f);
                 }
@@ -45,17 +63,7 @@ pub fn part_one(input: &str) -> Option<usize> {
             Block::Free => continue,
         }
     }
-    /*println!(
-        "{:?}",
-        temp.iter()
-            .map(|b| {
-                match b {
-                    Block::Data(id) => format!(" {id} ").to_string(),
-                    Block::Free => ". ".to_string(),
-                }
-            })
-            .collect::<String>()
-    );*/
+
     Some(
         temp.iter()
             .enumerate()
