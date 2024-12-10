@@ -12,10 +12,10 @@ fn parse(input: &str) -> Vec<Vec<usize>> {
 
 fn calc(v: &[usize], ins: usize) -> usize {
     let mut res = v[0];
-    for i in 1..v.len() {
+    for (i, n) in v.iter().enumerate().skip(1) {
         match (ins & (1 << (i - 1))) != 0 {
-            true => res += v[i],
-            false => res *= v[i],
+            true => res += n,
+            false => res *= n,
         };
     }
     res
@@ -24,11 +24,11 @@ fn calc(v: &[usize], ins: usize) -> usize {
 fn ternary(num: usize) -> Vec<u8> {
     let mut res = vec![0; 41];
     let mut num = num;
-    for i in 0..41 {
+    for r in res.iter_mut().take(41) {
         let quot = num / 3;
         let rem = num % 3;
         num = quot;
-        res[i] = rem as u8;
+        *r = rem as u8;
         if quot == 0 {
             break;
         }

@@ -61,7 +61,7 @@ impl Map {
         }
     }
 
-    fn print(&self) {
+    fn _print(&self) {
         for y in 0..self.height {
             for x in 0..self.width {
                 if (x, y) == self.guard {

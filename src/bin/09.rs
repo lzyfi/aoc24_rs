@@ -74,7 +74,7 @@ pub fn part_one(input: &str) -> Option<usize> {
         .enumerate()
         .filter_map(|(i, b)| match b {
             Block::Free => Some(i),
-            _ => None,
+            Block::Data(_) => None,
         })
         .collect();
 
@@ -170,7 +170,7 @@ pub fn part_two(input: &str) -> Option<usize> {
             }
         }
     }
-    
+
     Some(checksum2(&temp))
 }
 

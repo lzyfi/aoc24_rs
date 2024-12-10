@@ -18,7 +18,7 @@ pub fn part_one(input: &str) -> Option<u32> {
         for x in 0..board[0].len() {
             for (dx, dy) in dirs {
                 let mut m = true;
-                for iter in 0..word.len() {
+                for (iter, char) in word.iter().enumerate() {
                     let y_n = (y as i32 + dy * iter as i32) as usize;
                     let x_n = (x as i32 + dx * iter as i32) as usize;
                     if y_n >= board.len() || x_n >= board[1].len() {
@@ -26,7 +26,7 @@ pub fn part_one(input: &str) -> Option<u32> {
                         break;
                     }
 
-                    if board[y_n][x_n] != word[iter] {
+                    if board[y_n][x_n] != *char {
                         m = false;
                         break;
                     }
