@@ -118,6 +118,20 @@ pub fn part_two(input: &str) -> Option<usize> {
 
     let max = *layout.iter().max().unwrap();
 
+    let mut free = temp
+        .iter()
+        .enumerate()
+        .collect::<Vec<_>>()
+        .split(|n| *n.1 != -1)
+        .filter_map(|v| {
+            if v.is_empty() {
+                None
+            } else {
+                Some((v[0].0, v.len()))
+            }
+        })
+        .collect::<Vec<_>>();
+
     let mut inds = vec![0; max as usize + 1];
     inds[0] = 0;
     let mut count = 0;
@@ -130,19 +144,33 @@ pub fn part_two(input: &str) -> Option<usize> {
 
     for id in (0..=max).rev() {
         let size = layout.iter().filter(|n| n == &&id).count();
-        for (i, w) in temp.clone().windows(size).enumerate() {
-            if *w == vec![-1; size] {
-                if i > inds[id as usize] {
-                    break;
-                }
+        for (f_ind, (i, s)) in free.clone().iter().enumerate() {
+            if *s < size {
+                continue;
+            }
+
+            if *i > inds[id as usize] {
+                break;
+            }
+
+            if *s == size {
                 for j in 0..size {
                     temp.swap(i + j, inds[id as usize] + j);
                 }
+                free.remove(f_ind);
+                break;
+            }
+
+            if *s > size {
+                for j in 0..size {
+                    temp.swap(i + j, inds[id as usize] + j);
+                }
+                free[f_ind] = (free[f_ind].0 + size, free[f_ind].1 - size);
                 break;
             }
         }
     }
-
+    
     Some(checksum2(&temp))
 }
 
