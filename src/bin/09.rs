@@ -142,8 +142,12 @@ pub fn part_two(input: &str) -> Option<usize> {
         }
     }
 
+    let sizes = (0..=max)
+        .map(|id| layout.iter().filter(|n| n == &&id).count())
+        .collect::<Vec<_>>();
+
     for id in (0..=max).rev() {
-        let size = layout.iter().filter(|n| n == &&id).count();
+        let size = sizes[id as usize];
         for (f_ind, (i, s)) in free.clone().iter().enumerate() {
             if *s < size {
                 continue;
