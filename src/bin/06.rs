@@ -1,6 +1,5 @@
-use std::num::Wrapping;
-
 use rayon::iter::{IntoParallelIterator, ParallelIterator};
+use std::num::Wrapping;
 
 advent_of_code::solution!(6);
 
@@ -49,11 +48,14 @@ impl Map {
     fn escapes(&mut self, threshold: usize) -> bool {
         let mut old;
         let mut count = 0;
+
         loop {
             old = self.unique;
+
             if self.update_guard() {
                 return true;
             }
+
             count = if self.unique == old { count + 1 } else { 0 };
             if count > threshold {
                 return false;
@@ -125,7 +127,9 @@ pub fn part_two(input: &str) -> Option<u32> {
     let map = parse(input);
     let mut ran = map.clone();
     let max = map.height * map.width;
+
     ran.run();
+
     Some(
         (0..map.height)
             .into_par_iter()
@@ -137,7 +141,7 @@ pub fn part_two(input: &str) -> Option<u32> {
                     if ran.obstacles[y][x] != 2 || map.guard == (x, y) {
                         continue;
                     }
-                    
+
                     map_cl.obstacles[y][x] = 1;
                     if !map_cl.escapes(max) {
                         count += 1;

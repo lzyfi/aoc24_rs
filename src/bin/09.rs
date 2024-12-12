@@ -135,6 +135,7 @@ pub fn part_two(input: &str) -> Option<usize> {
     let mut inds = vec![0; max as usize + 1];
     inds[0] = 0;
     let mut count = 0;
+
     for (ind, val) in temp.iter().enumerate() {
         if *val == count + 1 {
             inds[*val as usize] = ind;

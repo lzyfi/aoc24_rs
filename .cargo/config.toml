@@ -6,7 +6,7 @@ read = "run --quiet --release -- read"
 
 solve = "run --quiet --release -- solve"
 all = "run --quiet --release -- all"
-time = "run --quiet --release -- time"
+time = "run --quiet --profile bench -- time"
 
 [env]
 AOC_YEAR = "2024"

@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use rustc_hash::FxHashMap;
 
 advent_of_code::solution!(1);
 
@@ -35,7 +35,8 @@ pub fn part_two(input: &str) -> Option<u32> {
     let (mut left, mut right) = parse(input);
     left.sort_unstable();
     right.sort_unstable();
-    let mut map = HashMap::with_capacity(right.len());
+    let mut map = FxHashMap::default();
+    map.reserve(right.len());
 
     for n in right {
         *map.entry(n).or_insert(0) += 1;

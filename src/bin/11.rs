@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use rustc_hash::FxHashMap;
 
 advent_of_code::solution!(11);
 
@@ -24,7 +24,7 @@ fn blink(stone: usize) -> (usize, Option<usize>) {
     }
 }
 
-fn count(stone: usize, gens: usize, cache: &mut HashMap<(usize, usize), usize>) -> usize {
+fn count(stone: usize, gens: usize, cache: &mut FxHashMap<(usize, usize), usize>) -> usize {
     if gens == 0 {
         1
     } else {
@@ -35,7 +35,7 @@ fn count(stone: usize, gens: usize, cache: &mut HashMap<(usize, usize), usize>) 
         }
 
         let (f, s) = blink(stone);
-        
+
         let mut c = count(f, gens - 1, cache);
 
         if let Some(second) = s {
@@ -49,7 +49,7 @@ fn count(stone: usize, gens: usize, cache: &mut HashMap<(usize, usize), usize>) 
 }
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let mut cache = HashMap::new();
+    let mut cache = FxHashMap::default();
 
     let mut total = 0;
 
@@ -61,7 +61,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<usize> {
-    let mut cache = HashMap::new();
+    let mut cache = FxHashMap::default();
 
     let mut total = 0;
 
