@@ -21,9 +21,6 @@ fn parse(input: &str) -> Vec<Block> {
                 temp.append(&mut vec![Block::Free; n as usize]);
             }
             data = !data;
-        } else {
-            println!("Invalid {}", char as u8);
-            panic!();
         }
     }
 
@@ -45,9 +42,6 @@ fn parse2(input: &str) -> Vec<isize> {
                 temp.append(&mut vec![-1; n as usize]);
             }
             data = !data;
-        } else {
-            println!("Invalid {}", char as u8);
-            panic!();
         }
     }
 
