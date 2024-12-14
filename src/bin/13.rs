@@ -1,3 +1,5 @@
+use std::{borrow::ToOwned, string::ToString};
+
 advent_of_code::solution!(13);
 
 #[derive(Debug, Clone)]
@@ -32,10 +34,10 @@ fn parse(input: &str) -> Vec<Machine> {
     let parts: Vec<Vec<String>> = input
         .lines()
         .filter(|l| !l.is_empty())
-        .map(std::string::ToString::to_string)
+        .map(ToString::to_string)
         .collect::<Vec<_>>()
         .chunks(3)
-        .map(std::borrow::ToOwned::to_owned)
+        .map(ToOwned::to_owned)
         .collect::<Vec<_>>();
 
     let mut temp = vec![];
