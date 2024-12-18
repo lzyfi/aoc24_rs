@@ -21,16 +21,6 @@ fn parse(input: &str) -> Vec<Robot> {
     temp
 }
 
-fn mod_inverse(a: i32, m: i32) -> i32 {
-    let a = a % m;
-    for x in 1..m {
-        if (a * x) % m == 1 {
-            return x;
-        }
-    }
-    1
-}
-
 pub fn part_one(input: &str) -> Option<u32> {
     let width = 101;
     let height = 103;
@@ -65,76 +55,23 @@ pub fn part_two(input: &str) -> Option<u32> {
     let width = 101;
     let height = 103;
 
-    let mut robots = parse(input);
+    let robots = parse(input);
 
-    // columns repeat every width times, rows every height times
-    // so we can solve for columns mod widt & rows mod height
-    // and use Chinese remainder theory magic to get the actual solution
-
-    let mut cols = Vec::new();
-
-    for i in 0..width {
-        let mut temp = vec![0; width];
-
-        for [x, _, vx, _] in &robots {
-            let ind = (x + vx * i as i32).rem_euclid(width as i32);
-            temp[ind as usize] += 1;
-        }
-
-        // width of christmas tree bounding box is 33
-        if temp.iter().filter(|&&v| v >= 33).count() >= 2 {
-            cols.push(i);
-        }
-    }
-
-    let mut rows = Vec::new();
-
-    for i in 0..height {
-        let mut temp = vec![0; height];
-
-        for [_, y, _, vy] in &robots {
-            let ind = (y + vy * i as i32).rem_euclid(height as i32);
-            temp[ind as usize] += 1;
-        }
-
-        // height of christmas tree bounding box is 31
-        if temp.iter().filter(|&&v| v >= 31).count() >= 2 {
-            rows.push(i);
-        }
-    }
-
-    if rows.len() == 1 && cols.len() == 1 {
-        let a = cols[0] as i32;
-        let b = rows[0] as i32;
-
-        let width = width as i32;
-        let height = height as i32;
-
-        // Chinese remainder theory magic
-        let mod_inv = mod_inverse(width, height);
-        return Some((a + mod_inv * (b - a) * width).rem_euclid(width * height) as u32);
-    }
-
-    // if everything else fails look for combinations of all unique positions
+    // the christmas tree seems to have every robot in a unique position
     'outer: for i in 1..100_000 {
-        robots.iter_mut().for_each(|r| {
-            r[0] += r[2];
-            r[1] += r[3]
-        });
-        for y in 0..height {
-            for x in 0..width {
-                if robots
-                    .iter()
-                    .filter(|r| r[0] == x as i32 && r[1] == y as i32)
-                    .count()
-                    > 1
-                {
-                    continue 'outer;
-                }
+        let mut locations = vec![vec![false; width]; height];
+
+        for r in &robots {
+            let x = (r[0] + i * r[2]).rem_euclid(width as i32) as usize;
+            let y = (r[1] + i * r[3]).rem_euclid(height as i32) as usize;
+            if locations[y][x] {
+                continue 'outer;
+            } else {
+                locations[y][x] = true;
             }
         }
-
-        return Some(i);
+        
+        return Some(i as u32);
     }
     None
 }
