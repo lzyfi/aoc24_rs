@@ -1,3 +1,5 @@
+use std::sync::{LazyLock, Mutex};
+
 use rustc_hash::FxHashMap;
 
 advent_of_code::solution!(11);
@@ -48,27 +50,26 @@ fn count(stone: usize, gens: usize, cache: &mut FxHashMap<(usize, usize), usize>
     }
 }
 
-pub fn part_one(input: &str) -> Option<u32> {
-    let mut cache = FxHashMap::default();
+static CACHE: LazyLock<Mutex<FxHashMap<(usize, usize), usize>>> =
+    LazyLock::new(|| Mutex::new(FxHashMap::default()));
 
+pub fn part_one(input: &str) -> Option<u32> {
     let mut total = 0;
 
     for stone in parse(input) {
-        total += count(stone, 25, &mut cache);
+        total += count(stone, 25, &mut CACHE.lock().unwrap());
     }
 
     Some(total as u32)
 }
 
 pub fn part_two(input: &str) -> Option<usize> {
-    let mut cache = FxHashMap::default();
-
     let mut total = 0;
 
     for stone in parse(input) {
-        total += count(stone, 75, &mut cache);
+        total += count(stone, 75, &mut CACHE.lock().unwrap());
     }
-
+    
     Some(total)
 }
 
