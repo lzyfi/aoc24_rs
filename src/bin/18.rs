@@ -72,19 +72,21 @@ pub fn part_two(input: &str) -> Option<String> {
     None
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+// not useful to test this, won't be sharing inputs
 
-    #[test]
-    fn test_part_one() {
-        let result = part_one(&advent_of_code::template::read_file("inputs", DAY));
-        assert_eq!(result, Some(250));
-    }
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
 
-    #[test]
-    fn test_part_two() {
-        let result = part_two(&advent_of_code::template::read_file("inputs", DAY));
-        assert_eq!(result, Some("[56, 8]".to_string()));
-    }
-}
+//     #[test]
+//     fn test_part_one() {
+//         let result = part_one(&advent_of_code::template::read_file("inputs", DAY));
+//         assert_eq!(result, Some(250));
+//     }
+
+//     #[test]
+//     fn test_part_two() {
+//         let result = part_two(&advent_of_code::template::read_file("inputs", DAY));
+//         assert_eq!(result, Some("[56, 8]".to_string()));
+//     }
+// }
