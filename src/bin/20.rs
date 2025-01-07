@@ -42,26 +42,26 @@ fn bfs(map: &[Vec<bool>], start: [usize; 3], end: [usize; 2]) -> (usize, Vec<Vec
 
     let mut length = usize::MAX;
 
-    while let Some(v) = q.pop_front() {
-        if v[2] < lengths[v[1]][v[0]] {
-            lengths[v[1]][v[0]] = v[2];
+    while let Some([x, y, l]) = q.pop_front() {
+        if l < lengths[y][x] {
+            lengths[y][x] = l;
         }
 
-        if [v[0], v[1]] == end {
-            if v[2] < length {
-                length = v[2];
+        if [x, y] == end {
+            if l < length {
+                length = l;
             }
             continue;
         }
 
         for dir in DIRS {
             let [nx, ny] = [
-                (v[0] as i32 + dir[0]) as usize,
-                (v[1] as i32 + dir[1]) as usize,
+                (x as i32 + dir[0]) as usize,
+                (y as i32 + dir[1]) as usize,
             ];
             if !(nx >= width || ny >= height || visited[ny][nx]) {
                 visited[ny][nx] = true;
-                q.push_back([nx, ny, v[2] + 1]);
+                q.push_back([nx, ny, l + 1]);
             }
         }
     }
@@ -91,9 +91,11 @@ pub fn part_one(input: &str) -> Option<u32> {
                 (x as i32 + dir[0]) as usize,
                 (y as i32 + dir[1]) as usize,
             ];
+
             if nx >= width || ny >= height {
                 continue;
             }
+
             if lengths[ny][nx] == lengths[y][x] + 1 {
                 q.push_back([nx, ny]);
             }
@@ -108,11 +110,13 @@ pub fn part_one(input: &str) -> Option<u32> {
             }
 
             let cheat_len = length as i32 - lengths[y][x] as i32 - lengths2[ny][nx] as i32 - 2;
+
             if cheat_len >= 100 {
                 cheats += 1;
             }
         }
     }
+    
     Some(cheats)
 }
 
