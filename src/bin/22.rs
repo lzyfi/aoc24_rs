@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 advent_of_code::solution!(22);
 
 fn parse(input: &str) -> Vec<usize> {
