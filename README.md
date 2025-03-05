@@ -4,6 +4,10 @@
 
 Solutions for [Advent of Code](https://adventofcode.com/) in [Rust](https://www.rust-lang.org/).
 
+Implemented using a Github repository template. Solutions can be found in the 
+[src/bin/](https://github.com/lzyfi/aoc24_rs/tree/main/src/bin) directory. My goals were to create
+solutions that are fast and efficient, but still simple enough to be "maintainable" and understandable.
+
 <!--- advent_readme_stars table --->
 ## 2024 Results
 
